@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static App.Web.Models.Constants.Constants;
 
-namespace App.Web.Controllers
+namespace App.Web.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -17,7 +17,7 @@ namespace App.Web.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
-        
+
         public OrdersController(IOrderService orderService)
         {
             _orderService = orderService;
@@ -41,10 +41,11 @@ namespace App.Web.Controllers
             return _orderService.GetOrderAsync(orderId);
         }
 
+        [Authorize(Roles = Roles.Regular)]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public Task<ResponseTypedContract<OrderDetailDto>> CreateOrderAsync([FromBody] IEnumerable<ProductRequestContract> products)
+        public Task<ResponseTypedErrorContract<OrderDetailDto, IEnumerable<ProductDto>>> CreateOrderAsync([FromBody] IEnumerable<ProductRequestContract> products)
         {
             return _orderService.CreateOrderAsync(products);
         }

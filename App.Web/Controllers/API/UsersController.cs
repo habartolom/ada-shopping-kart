@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static App.Web.Models.Constants.Constants;
 
-namespace App.Web.Controllers
+namespace App.Web.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]

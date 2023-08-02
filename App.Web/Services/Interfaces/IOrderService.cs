@@ -6,7 +6,7 @@ namespace App.Web.Services.Interfaces
 {
     public interface IOrderService
     {
-        Task<ResponseTypedContract<OrderDetailDto>> CreateOrderAsync(IEnumerable<ProductRequestContract> products);
+        Task<ResponseTypedErrorContract<OrderDetailDto, IEnumerable<ProductDto>>> CreateOrderAsync(IEnumerable<ProductRequestContract> requestedProducts);
         Task<ResponseTypedContract<OrderDetailDto>> GetOrderAsync(Guid orderId);
         ResponseTypedContract<IEnumerable<OrderDto>> GetOrders(Guid userId);
     }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace App.Web.Controllers
+namespace App.Web.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]

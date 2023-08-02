@@ -21,13 +21,15 @@ namespace App.Web.Models.AutoMapper
                 .ForMember(dest => dest.Role, src => src.MapFrom(x => x.Role.Name))
                 .ForMember(dest => dest.Token, src => src.Ignore());
 
-            CreateMap<OrderEntity, OrderDetailDto>();
             
             CreateMap<OrderProductEntity, OrderProductDto>()
                 .ForMember(dest => dest.Id, src => src.MapFrom(x => x.Product.Id))
                 .ForMember(dest => dest.Name, src => src.MapFrom(x => x.Product.Name))
                 .ForMember(dest => dest.Price, src => src.MapFrom(x => x.Price))
                 .ForMember(dest => dest.Quantity, src => src.MapFrom(x => x.Quantity));
+
+            CreateMap<OrderEntity, OrderDetailDto>();
+            CreateMap<ProductEntity, ProductDto>();
         }
     }
 }

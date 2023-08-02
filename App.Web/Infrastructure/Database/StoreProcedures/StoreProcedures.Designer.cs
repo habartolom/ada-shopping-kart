@@ -61,9 +61,9 @@ namespace App.Web.Infrastructure.Database.StoreProcedures {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to IF NOT EXISTS (SELECT * FROM sys.objects WHERE name = N&apos;AddProductToOrder&apos; AND type = &apos;P&apos;)
+        ///   Looks up a localized string similar to IF NOT EXISTS (SELECT * FROM sys.objects WHERE name = N&apos;BulkInsertOrderProducts&apos; AND type = &apos;P&apos;)
         ///BEGIN
-        ///	EXEC dbo.sp_executesql @statement = N&apos;CREATE PROCEDURE [dbo].[AddProductToOrder] AS&apos;
+        ///	EXEC dbo.sp_executesql @statement = N&apos;CREATE PROCEDURE [dbo].[BulkInsertOrderProducts] AS&apos;
         ///END
         ///
         ///EXEC dbo.sp_executesql @statement = 
@@ -71,12 +71,11 @@ namespace App.Web.Infrastructure.Database.StoreProcedures {
         ///-- =============================================
         ///-- Author:		Harold Bartolo
         ///-- Create date: Aug 2, 2023
-        ///-- Description:	Add Product To Order
+        ///-- Description:	Products Ordered Bulk Insert 
         ///-- =============================================
         ///
-        ///ALTER   PROCEDURE [dbo].[AddProductToOrder] 
-        ///	@id UNIQUEIDENTIFIER,
-        ///    @price [rest of string was truncated]&quot;;.
+        ///ALTER   PROCEDURE [dbo].[BulkInsertOrderProducts] 
+        ///	@order [rest of string was truncated]&quot;;.
         /// </summary>
         public static string BulkInsertOrderProducts {
             get {
@@ -110,9 +109,9 @@ namespace App.Web.Infrastructure.Database.StoreProcedures {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to IF NOT EXISTS (SELECT * FROM sys.objects WHERE name = N&apos;AddProductToOrder&apos; AND type = &apos;P&apos;)
+        ///   Looks up a localized string similar to IF NOT EXISTS (SELECT * FROM sys.objects WHERE name = N&apos;CreateOrderProductsType&apos; AND type = &apos;P&apos;)
         ///BEGIN
-        ///	EXEC dbo.sp_executesql @statement = N&apos;CREATE PROCEDURE [dbo].[AddProductToOrder] AS&apos;
+        ///	EXEC dbo.sp_executesql @statement = N&apos;CREATE PROCEDURE [dbo].[CreateOrderProductsType] AS&apos;
         ///END
         ///
         ///EXEC dbo.sp_executesql @statement = 
@@ -120,16 +119,65 @@ namespace App.Web.Infrastructure.Database.StoreProcedures {
         ///-- =============================================
         ///-- Author:		Harold Bartolo
         ///-- Create date: Aug 2, 2023
-        ///-- Description:	Add Product To Order
+        ///-- Description:	Create Order Products Type
         ///-- =============================================
         ///
-        ///ALTER   PROCEDURE [dbo].[AddProductToOrder] 
-        ///	@id UNIQUEIDENTIFIER,
-        ///    @price [rest of string was truncated]&quot;;.
+        ///ALTER PROCEDURE [dbo].[CreateOrderProductsType] 
+        ///AS
+        ///BEGIN
+        ///	 [rest of string was truncated]&quot;;.
         /// </summary>
         public static string CreateOrderProductsType {
             get {
                 return ResourceManager.GetString("CreateOrderProductsType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IF NOT EXISTS (SELECT * FROM sys.objects WHERE name = N&apos;CreateOrderProductsType&apos; AND type = &apos;P&apos;)
+        ///BEGIN
+        ///	EXEC dbo.sp_executesql @statement = N&apos;CREATE PROCEDURE [dbo].[CreateOrderProductsType] AS&apos;
+        ///END
+        ///
+        ///EXEC dbo.sp_executesql @statement = 
+        ///N&apos;
+        ///-- =============================================
+        ///-- Author:		Harold Bartolo
+        ///-- Create date: Aug 2, 2023
+        ///-- Description:	Create Order Products Type
+        ///-- =============================================
+        ///
+        ///ALTER PROCEDURE [dbo].[CreateOrderProductsType] 
+        ///AS
+        ///BEGIN
+        ///	 [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string CreateProductsType {
+            get {
+                return ResourceManager.GetString("CreateProductsType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IF NOT EXISTS (SELECT * FROM sys.objects WHERE name = N&apos;MassiveUpdateProducts&apos; AND type = &apos;P&apos;)
+        ///BEGIN
+        ///	EXEC dbo.sp_executesql @statement = N&apos;CREATE PROCEDURE [dbo].[MassiveUpdateProducts] AS&apos;
+        ///END
+        ///
+        ///EXEC dbo.sp_executesql @statement = 
+        ///N&apos;
+        ///-- =============================================
+        ///-- Author:		Harold Bartolo
+        ///-- Create date: Aug 2, 2023
+        ///-- Description:	Update Products
+        ///-- =============================================
+        ///
+        ///ALTER   PROCEDURE [dbo].[MassiveUpdateProducts] 
+        ///	@productsTable dbo.Product [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string MassiveUpdateProducts {
+            get {
+                return ResourceManager.GetString("MassiveUpdateProducts", resourceCulture);
             }
         }
     }
