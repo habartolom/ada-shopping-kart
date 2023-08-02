@@ -1,15 +1,28 @@
+using App.Web.Infrastructure.Database.Context;
 using App.Web.Infrastructure.Implementations;
 using App.Web.Infrastructure.Interfaces;
+using App.Web.Models.AutoMapper;
 using App.Web.Services.Implementations;
 using App.Web.Services.Interfaces;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Text;
+using static Azure.Core.HttpHeader;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddDbContext<ApplicationContext>();
+builder.Services.AddScoped<ApplicationContext, ApplicationContext>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+builder.Services.AddTransient<IOrderRepository, OrderRepository>();
+builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 
 builder.Services.AddTransient<IOrderService, OrderService>();
@@ -17,6 +30,15 @@ builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IRoleService, RoleService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ICryptographyService, CryptographyService>();
+
+builder.Services.AddAutoMapper(typeof(Program));
+var configMapper = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile(new AutoMapperProfile());
+});
+
+var mapper = configMapper.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
@@ -60,6 +82,28 @@ builder.Services.AddSwaggerGen(option =>
         });
     });
 
+builder.Services.AddAuthentication()
+    .AddJwtBearer("JwtToken", x =>
+    {
+        x.RequireHttpsMetadata = false;
+        x.SaveToken = true;
+        x.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JWT:SecretKey").Value!)),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            AuthenticationType = "JwtToken"
+        };
+    });
+
+builder.Services.AddAuthorization(options =>
+    {
+        options.DefaultPolicy = new AuthorizationPolicyBuilder()
+            .RequireAuthenticatedUser()
+            .AddAuthenticationSchemes("JwtToken")
+            .Build();
+    });
 
 var app = builder.Build();
 
@@ -82,6 +126,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
 
 app.UseAuthorization();
 

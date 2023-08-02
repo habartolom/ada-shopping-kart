@@ -3,9 +3,11 @@
     public class OrderEntity
     {
         public Guid Id { get; set; }
-        public Guid UserId {  get; set; }
         public DateTime Date { get; set; }
-        public virtual ICollection<ProductEntity> Products { get; } = new List<ProductEntity>();
+        public double Total { get; set; }
+        public int Items { get; set; }
+        public Guid UserId {  get; set; }
+        public virtual ICollection<OrderProductEntity> Products { get; } = new List<OrderProductEntity>();
         public virtual UserEntity User { get; set; } = null!;
     }
 }

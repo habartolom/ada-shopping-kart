@@ -24,7 +24,7 @@ namespace App.Web.Controllers
         [HttpGet("Available")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public Task<ResponseTypedContract<IEnumerable<ProductDto>>> GetAvailableProductsAsync()
+        public Task<ResponseTypedContract<IEnumerable<OrderProductDto>>> GetAvailableProductsAsync()
         {
             return _productService.GetAvailableProductsAsync();
         }
@@ -35,7 +35,7 @@ namespace App.Web.Controllers
         [HttpGet("{productId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public Task<ResponseTypedContract<ProductDto>> GetProductsAsync([FromRoute] Guid productId)
+        public Task<ResponseTypedContract<OrderProductDto>> GetProductsAsync([FromRoute] Guid productId)
         {
             return _productService.GetProductAsync(productId);
         }
@@ -45,7 +45,7 @@ namespace App.Web.Controllers
         [HttpPut("{productId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public Task<ResponseTypedContract<ProductDto>> UpdateProductsAsync([FromRoute] Guid productId)
+        public Task<ResponseTypedContract<OrderProductDto>> UpdateProductsAsync([FromRoute] Guid productId)
         {
             return _productService.UpdateProductAsync(productId);
         }

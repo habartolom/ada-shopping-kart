@@ -1,4 +1,4 @@
-﻿namespace App.Web.Models.Contracts.Login
+﻿namespace App.Web.Models.Contracts.Users
 {
     public class LoginRequestContract
     {

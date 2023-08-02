@@ -1,10 +1,12 @@
-﻿using App.Web.Models.Contracts.Login;
+﻿using App.Web.Models.Constants;
 using App.Web.Models.Contracts.Response;
+using App.Web.Models.Contracts.Users;
 using App.Web.Models.Dtos;
 using App.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static App.Web.Models.Constants.Constants;
 
 namespace App.Web.Controllers
 {
@@ -20,9 +22,8 @@ namespace App.Web.Controllers
             _userService = userService;
         }
 
-        //admin - regular
         [AllowAnonymous]
-        [HttpPost("signUp")]
+        [HttpPost("SignUp")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public Task<ResponseTypedContract<UserDto>> CreateUserAsync([FromBody] SignUpDto signUp)
@@ -30,18 +31,16 @@ namespace App.Web.Controllers
             return _userService.CreateUserAsync(signUp);
         }
 
-        //admmin
-        [AllowAnonymous]
+        [Authorize(Roles = Roles.Admin)]
         [HttpGet("Regular")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public Task<ResponseTypedContract<IEnumerable<UserDto>>> GetAllRegularUsersAsync()
+        public ResponseTypedContract<IEnumerable<UserDto>> GetAllRegularUsersAsync()
         {
-            return _userService.GetAllRegularUsersAsync();
+            return _userService.GetAllRegularUsers();
         }
 
-        //admin
-        [AllowAnonymous]
+        [Authorize(Roles = Roles.Admin)]
         [HttpGet("{userId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -50,9 +49,8 @@ namespace App.Web.Controllers
             return _userService.GetUserAsync(userId);
         }
 
-        //admin - regular
-        [HttpPost("logIn")]
         [AllowAnonymous]
+        [HttpPost("LogIn")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public Task<ResponseTypedContract<LoginResponseContract>> LogUserAsync([FromBody] LoginRequestContract loginRequest)

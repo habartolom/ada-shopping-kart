@@ -7,21 +7,21 @@ namespace App.Web.Services.Implementations
 {
     public class ProductService : IProductService
     {
-        public async Task<ResponseTypedContract<IEnumerable<ProductDto>>> GetAvailableProductsAsync()
+        public async Task<ResponseTypedContract<IEnumerable<OrderProductDto>>> GetAvailableProductsAsync()
         {
-            var response = new ResponseTypedContract<IEnumerable<ProductDto>>();
+            var response = new ResponseTypedContract<IEnumerable<OrderProductDto>>();
             return response;
         }
 
-        public async Task<ResponseTypedContract<ProductDto>> GetProductAsync(Guid productId)
+        public async Task<ResponseTypedContract<OrderProductDto>> GetProductAsync(Guid productId)
         {
-            var response = new ResponseTypedContract<ProductDto>();
+            var response = new ResponseTypedContract<OrderProductDto>();
             return response;
         }
 
-        public async Task<ResponseTypedContract<ProductDto>> UpdateProductAsync(Guid productId)
+        public async Task<ResponseTypedContract<OrderProductDto>> UpdateProductAsync(Guid productId)
         {
-            var response = new ResponseTypedContract<ProductDto>();
+            var response = new ResponseTypedContract<OrderProductDto>();
             return response;
         }
     }
