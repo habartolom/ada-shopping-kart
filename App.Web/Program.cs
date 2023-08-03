@@ -41,6 +41,16 @@ var mapper = configMapper.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.AllowAnyHeader();
+        builder.AllowAnyMethod();
+        builder.AllowAnyOrigin();
+    });
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
 {
@@ -122,6 +132,8 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Almapac V1");
 });
 
+app.UseCors("CorsPolicy");
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -132,6 +144,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Accounts}/{action=Login}/{id?}");
 
 app.Run();

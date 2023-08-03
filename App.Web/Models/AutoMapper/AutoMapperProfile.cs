@@ -24,7 +24,8 @@ namespace App.Web.Models.AutoMapper
                 .ForMember(dest => dest.Id, src => src.MapFrom(x => x.Product.Id))
                 .ForMember(dest => dest.Name, src => src.MapFrom(x => x.Product.Name))
                 .ForMember(dest => dest.Price, src => src.MapFrom(x => x.Price))
-                .ForMember(dest => dest.Quantity, src => src.MapFrom(x => x.Quantity));
+                .ForMember(dest => dest.Quantity, src => src.MapFrom(x => x.Quantity))
+                .ForMember(dest => dest.Description, src => src.MapFrom(x => x.Product.Description));
 
             CreateMap<OrderEntity, OrderDetailDto>();
             CreateMap<ProductEntity, ProductDto>();
