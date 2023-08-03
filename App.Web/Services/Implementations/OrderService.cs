@@ -1,6 +1,4 @@
-﻿using App.Web.Infrastructure.Implementations;
-using App.Web.Infrastructure.Interfaces;
-using App.Web.Models.Constants;
+﻿using App.Web.Infrastructure.Interfaces;
 using App.Web.Models.Contracts.Orders;
 using App.Web.Models.Contracts.Response;
 using App.Web.Models.Dtos;
@@ -8,11 +6,7 @@ using App.Web.Models.Entities;
 using App.Web.Models.Enums;
 using App.Web.Services.Interfaces;
 using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System.Security.Claims;
-using System.Text.Json.Serialization;
 
 namespace App.Web.Services.Implementations
 {
@@ -42,35 +36,29 @@ namespace App.Web.Services.Implementations
                 string username = claimsIdentity!.FindFirst(ClaimTypes.Name)!.Value;
                 UserEntity user = await _userRepository.GetUserByUsernameAsync(username);
 
-                IEnumerable<ProductEntity> products = _productRepository.GetProductsByIds(requestedProducts.Select(x => x.Id));
-                IEnumerable<Guid> requestedInvalidProductIds = requestedProducts.Select(x => x.Id).Except(products.Select(x => x.Id));
-                if (requestedInvalidProductIds.Any()) throw new Exception("Bad Request");
-
-                IEnumerable<ProductEntity> requestedProductsWithoutStock = GetRequestedProductsWithoutStock(requestedProducts, products);
-                if (requestedProductsWithoutStock.Any())
+                var orderId = Guid.NewGuid();
+                await _orderRepository.CreateOrderAsync(requestedProducts, orderId, user.Id);
+                
+                OrderEntity? order = await _orderRepository.GetOrderAsync(orderId);
+                if (order is null)
                 {
-                    response.DataError = _mapper.Map<IEnumerable<ProductDto>>(requestedProductsWithoutStock);
-                    throw new ApplicationException("There are some products without stock");
+                    var orderedProducts =  _productRepository.GetProductsByIds(requestedProducts.Select(x => x.Id));
+                    if (!requestedProducts.Count().Equals(orderedProducts.Count())) throw new Exception("Bad Request");
+
+                    var orderedProductsWithoutStock = (
+                        from requestedProduct in requestedProducts
+                        join orderedProduct in orderedProducts on requestedProduct.Id equals orderedProduct.Id
+                        where requestedProduct.Quantity > orderedProduct.Stock
+                        select orderedProduct
+                    );
+
+                    if (orderedProductsWithoutStock.Any())
+                    {
+                        response.DataError = _mapper.Map<IEnumerable<ProductDto>>(orderedProductsWithoutStock);
+                        throw new ApplicationException("There are some products without stock");
+                    }
                 }
 
-                Guid orderId = Guid.NewGuid();
-                IEnumerable<OrderProductEntity> orderedProducts = GetOrderedProducts(orderId, requestedProducts, products);
-                IEnumerable<ProductEntity> productsToUpdate = GetUpdatedProducts(requestedProducts, products);
-                
-                var order = new OrderEntity()
-                {
-                    Id = orderId,
-                    Date = DateTime.Now,
-                    Total = orderedProducts.Sum(x => x.Total),
-                    Items = orderedProducts.Sum(x => x.Quantity),
-                    UserId = user.Id
-                };
-
-                await _orderRepository.CreateOrderAsync(order);
-                await _orderRepository.AddProductsToOrder(orderedProducts);
-                await _productRepository.Update(productsToUpdate);
-
-                order = await _orderRepository.GetOrderAsync(order.Id);
                 response.Data = _mapper.Map<OrderDetailDto>(order);
             }
             catch (ApplicationException ex)

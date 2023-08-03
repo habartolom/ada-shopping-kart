@@ -38,7 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Infrastructure\Database\StoreProcedures\Products\" />
     <Folder Include="Models\Exceptions\" />
   </ItemGroup>
 

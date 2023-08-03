@@ -1,11 +1,11 @@
 ﻿using App.Web.Infrastructure.Database.Context;
 using App.Web.Infrastructure.Database.StoreProcedures;
 using App.Web.Infrastructure.Interfaces;
+using App.Web.Models.Contracts.Orders;
 using App.Web.Models.Dtos;
 using App.Web.Models.Entities;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Data;
 
 namespace App.Web.Infrastructure.Implementations
@@ -21,40 +21,23 @@ namespace App.Web.Infrastructure.Implementations
             _table = _dbContext.Set<OrderEntity>();
         }
 
-        public async Task<int> AddProductsToOrder(IEnumerable<OrderProductEntity> orderProducts)
+        public async Task<int> CreateOrderAsync(IEnumerable<ProductRequestContract> requestedProducts, Guid orderId, Guid userId)
         {
-            string createOrderProductsTypeSqlStatement = StoreProcedures.CreateOrderProductsType;
-            string bulkInsertOrderProductsSqlStatement = StoreProcedures.BulkInsertOrderProducts;
+            string createRequestedProductsTypeSqlStatement = StoreProcedures.CreateRequestedProductsType;
+            string createOrderSqlStatement = StoreProcedures.CreateOrder;
 
-            await _dbContext.Database.ExecuteSqlRawAsync(createOrderProductsTypeSqlStatement);
+            await _dbContext.Database.ExecuteSqlRawAsync(createRequestedProductsTypeSqlStatement);
 
-            DataTable dataTable = GetOrderProductsDataTable(orderProducts);
+            DataTable dataTable = GetRequestedProductsDataTable(requestedProducts);
             var sqlParameters = new SqlParameter[]
             {
-                new SqlParameter
-                {
-                    ParameterName = "@orderProductsTable",
-                    Value = dataTable,
-                    TypeName = "dbo.OrderProductsTableType"
-                }
+                new SqlParameter("@orderId", orderId),
+                new SqlParameter("@orderDate", DateTime.Now),
+                new SqlParameter("@userId", userId),
+                new SqlParameter { ParameterName = "@requestedProductsTable", Value = dataTable, TypeName = "dbo.RequestedProductsTableType" }
             };
 
-            return await _dbContext.Database.ExecuteSqlRawAsync(bulkInsertOrderProductsSqlStatement, sqlParameters);
-        }
-
-        public Task<int> CreateOrderAsync(OrderEntity order)
-        {
-            string sqlStatement = StoreProcedures.CreateOrder;
-            var sqlParameters = new SqlParameter[]
-            {
-                new SqlParameter("@id", order.Id),
-                new SqlParameter("@userId", order.UserId),
-                new SqlParameter("@date", order.Date),
-                new SqlParameter("@items", order.Items),
-                new SqlParameter("@total", order.Total)
-            };
-
-            return _dbContext.Database.ExecuteSqlRawAsync(sqlStatement, sqlParameters);
+            return await _dbContext.Database.ExecuteSqlRawAsync(createOrderSqlStatement, sqlParameters);
         }
 
         public async Task<OrderEntity?> GetOrderAsync(Guid orderId)
@@ -84,25 +67,17 @@ namespace App.Web.Infrastructure.Implementations
             return orders;
         }
 
-        private DataTable GetOrderProductsDataTable(IEnumerable<OrderProductEntity> orderProducts)
+        private DataTable GetRequestedProductsDataTable(IEnumerable<ProductRequestContract> requestedProducts)
         {
             var dataSourceTable = new DataTable();
             dataSourceTable.Columns.Add("Id", typeof(Guid));
             dataSourceTable.Columns.Add("Quantity", typeof(int));
-            dataSourceTable.Columns.Add("Price", typeof(double));
-            dataSourceTable.Columns.Add("Total", typeof(double));
-            dataSourceTable.Columns.Add("OrderId", typeof(Guid));
-            dataSourceTable.Columns.Add("ProductId", typeof(Guid));
 
-            foreach (OrderProductEntity orderProduct in orderProducts) 
+            foreach (ProductRequestContract product in requestedProducts) 
             {
                 dataSourceTable.Rows.Add(
-                    orderProduct.Id,
-                    orderProduct.Quantity,
-                    orderProduct.Price,
-                    orderProduct.Total,
-                    orderProduct.OrderId,
-                    orderProduct.ProductId
+                    product.Id,
+                    product.Quantity
                 );
             }
 

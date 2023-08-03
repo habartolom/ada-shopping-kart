@@ -61,29 +61,6 @@ namespace App.Web.Infrastructure.Database.StoreProcedures {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to IF NOT EXISTS (SELECT * FROM sys.objects WHERE name = N&apos;BulkInsertOrderProducts&apos; AND type = &apos;P&apos;)
-        ///BEGIN
-        ///	EXEC dbo.sp_executesql @statement = N&apos;CREATE PROCEDURE [dbo].[BulkInsertOrderProducts] AS&apos;
-        ///END
-        ///
-        ///EXEC dbo.sp_executesql @statement = 
-        ///N&apos;
-        ///-- =============================================
-        ///-- Author:		Harold Bartolo
-        ///-- Create date: Aug 2, 2023
-        ///-- Description:	Products Ordered Bulk Insert 
-        ///-- =============================================
-        ///
-        ///ALTER   PROCEDURE [dbo].[BulkInsertOrderProducts] 
-        ///	@order [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string BulkInsertOrderProducts {
-            get {
-                return ResourceManager.GetString("BulkInsertOrderProducts", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to IF NOT EXISTS (SELECT * FROM sys.objects WHERE name = N&apos;CreateOrder&apos; AND type = &apos;P&apos;)
         ///BEGIN
         ///	EXEC dbo.sp_executesql @statement = N&apos;CREATE PROCEDURE [dbo].[CreateOrder] AS&apos;
@@ -94,13 +71,13 @@ namespace App.Web.Infrastructure.Database.StoreProcedures {
         ///-- =============================================
         ///-- Author:		Harold Bartolo
         ///-- Create date: Aug 2, 2023
-        ///-- Description:	Insert Order
+        ///-- Description:	Create Order
         ///-- =============================================
         ///
-        ///ALTER   PROCEDURE [dbo].[CreateOrder] 
-        ///	@id UNIQUEIDENTIFIER,
-        ///    @userId UNIQUEIDENTIFIER,
-        ///    @ [rest of string was truncated]&quot;;.
+        ///ALTER PROCEDURE [dbo].[CreateOrder] 
+        ///	@orderId UNIQUEIDENTIFIER,
+        ///    @orderDate DATETIME,
+        ///    @us [rest of string was truncated]&quot;;.
         /// </summary>
         public static string CreateOrder {
             get {
@@ -109,9 +86,9 @@ namespace App.Web.Infrastructure.Database.StoreProcedures {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to IF NOT EXISTS (SELECT * FROM sys.objects WHERE name = N&apos;CreateOrderProductsType&apos; AND type = &apos;P&apos;)
+        ///   Looks up a localized string similar to IF NOT EXISTS (SELECT * FROM sys.objects WHERE name = N&apos;CreateRequestedProductsType&apos; AND type = &apos;P&apos;)
         ///BEGIN
-        ///	EXEC dbo.sp_executesql @statement = N&apos;CREATE PROCEDURE [dbo].[CreateOrderProductsType] AS&apos;
+        ///	EXEC dbo.sp_executesql @statement = N&apos;CREATE PROCEDURE [dbo].[CreateRequestedProductsType] AS&apos;
         ///END
         ///
         ///EXEC dbo.sp_executesql @statement = 
@@ -119,65 +96,14 @@ namespace App.Web.Infrastructure.Database.StoreProcedures {
         ///-- =============================================
         ///-- Author:		Harold Bartolo
         ///-- Create date: Aug 2, 2023
-        ///-- Description:	Create Order Products Type
+        ///-- Description:	Create Requested Products Type
         ///-- =============================================
         ///
-        ///ALTER PROCEDURE [dbo].[CreateOrderProductsType] 
-        ///AS
-        ///BEGIN
-        ///	 [rest of string was truncated]&quot;;.
+        ///ALTER PROCEDURE [dbo].[CreateRequestedProductsType [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string CreateOrderProductsType {
+        public static string CreateRequestedProductsType {
             get {
-                return ResourceManager.GetString("CreateOrderProductsType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to IF NOT EXISTS (SELECT * FROM sys.objects WHERE name = N&apos;CreateOrderProductsType&apos; AND type = &apos;P&apos;)
-        ///BEGIN
-        ///	EXEC dbo.sp_executesql @statement = N&apos;CREATE PROCEDURE [dbo].[CreateOrderProductsType] AS&apos;
-        ///END
-        ///
-        ///EXEC dbo.sp_executesql @statement = 
-        ///N&apos;
-        ///-- =============================================
-        ///-- Author:		Harold Bartolo
-        ///-- Create date: Aug 2, 2023
-        ///-- Description:	Create Order Products Type
-        ///-- =============================================
-        ///
-        ///ALTER PROCEDURE [dbo].[CreateOrderProductsType] 
-        ///AS
-        ///BEGIN
-        ///	 [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string CreateProductsType {
-            get {
-                return ResourceManager.GetString("CreateProductsType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to IF NOT EXISTS (SELECT * FROM sys.objects WHERE name = N&apos;MassiveUpdateProducts&apos; AND type = &apos;P&apos;)
-        ///BEGIN
-        ///	EXEC dbo.sp_executesql @statement = N&apos;CREATE PROCEDURE [dbo].[MassiveUpdateProducts] AS&apos;
-        ///END
-        ///
-        ///EXEC dbo.sp_executesql @statement = 
-        ///N&apos;
-        ///-- =============================================
-        ///-- Author:		Harold Bartolo
-        ///-- Create date: Aug 2, 2023
-        ///-- Description:	Update Products
-        ///-- =============================================
-        ///
-        ///ALTER   PROCEDURE [dbo].[MassiveUpdateProducts] 
-        ///	@productsTable dbo.Product [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string MassiveUpdateProducts {
-            get {
-                return ResourceManager.GetString("MassiveUpdateProducts", resourceCulture);
+                return ResourceManager.GetString("CreateRequestedProductsType", resourceCulture);
             }
         }
     }

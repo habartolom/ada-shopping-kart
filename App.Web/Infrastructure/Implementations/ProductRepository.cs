@@ -27,49 +27,5 @@ namespace App.Web.Infrastructure.Implementations
 
             return products;
         }
-
-        public async Task<int> Update(IEnumerable<ProductEntity> products)
-        {
-            _table.UpdateRange(products);
-            _dbContext.SaveChanges();
-            //string createProductsTypeSqlStatement = StoreProcedures.CreateProductsType;
-            //string massiveUpdateProductsSqlStatement = StoreProcedures.MassiveUpdateProducts;
-
-            //await _dbContext.Database.ExecuteSqlRawAsync(createProductsTypeSqlStatement);
-            
-            //DataTable dataTable = GetProductsDataTable(products);
-            //var sqlParameters = new SqlParameter[]
-            //{
-            //    new SqlParameter
-            //    {
-            //        ParameterName = "@productsTable",
-            //        Value = dataTable,
-            //        TypeName = "dbo.ProductsTableType"
-            //    }
-            //};
-
-            return 1;/*await _dbContext.Database.ExecuteSqlRawAsync(massiveUpdateProductsSqlStatement, sqlParameters);*/
-        }
-
-        private DataTable GetProductsDataTable(IEnumerable<ProductEntity> products)
-        {
-            var dataSourceTable = new DataTable();
-            dataSourceTable.Columns.Add("Id", typeof(Guid));
-            dataSourceTable.Columns.Add("Name", typeof(string));
-            dataSourceTable.Columns.Add("Price", typeof(double));
-            dataSourceTable.Columns.Add("Stock", typeof(int));
-
-            foreach (ProductEntity product in products)
-            {
-                dataSourceTable.Rows.Add(
-                    product.Id,
-                    product.Name,
-                    product.Price,
-                    product.Stock
-                );
-            }
-
-            return dataSourceTable;
-        }
     }
 }
