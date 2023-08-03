@@ -31,21 +31,21 @@ namespace App.Web.Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<ResponseTypedContract<UserDto>> CreateUserAsync(SignUpDto signUp)
+        public async Task<ResponseTypedContract<UserDto>> CreateUserAsync(SignupRequestContract signUpRequest)
         {
             var response =  new ResponseTypedContract<UserDto>();
             try
             {
-                UserEntity? existingUser = await _userRepository.GetUserByUsernameAsync(signUp.Username);
+                UserEntity? existingUser = await _userRepository.GetUserByUsernameAsync(signUpRequest.Username);
                 if (existingUser != null) throw new Exception("User cannot be created, username already exists");
 
                 byte[] salt = _cryptographyService.GenerateSalt();
-                byte[] hash = _cryptographyService.GenerateHash(signUp.Password, salt);
+                byte[] hash = _cryptographyService.GenerateHash(signUpRequest.Password, salt);
 
                 UserEntity newUser = new UserEntity
                 {
                     Id = Guid.NewGuid(),
-                    Username = signUp.Username.ToLower(),
+                    Username = signUpRequest.Username.ToLower(),
                     PasswordHash = Convert.ToBase64String(hash),
                     PasswordSalt = Convert.ToBase64String(salt),
                     IsActive = true,
@@ -53,9 +53,9 @@ namespace App.Web.Services.Implementations
                     Person = new PersonEntity
                     {
                         Id = Guid.NewGuid(),
-                        Name = signUp.Name,
-                        Address = signUp.Address,
-                        Phone = signUp.Phone
+                        Name = signUpRequest.Name,
+                        Address = signUpRequest.Address,
+                        Phone = signUpRequest.Phone
                     }
                 };
 

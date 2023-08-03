@@ -6,7 +6,7 @@ namespace App.Web.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<ResponseTypedContract<UserDto>> CreateUserAsync(SignUpDto signUp);
+        Task<ResponseTypedContract<UserDto>> CreateUserAsync(SignupRequestContract signUpRequest);
         ResponseTypedContract<IEnumerable<UserDto>> GetAllRegularUsers();
         Task<ResponseTypedContract<UserDto>> GetUserAsync(Guid userId);
         Task<ResponseTypedContract<LoginResponseContract>> LogUserAsync(LoginRequestContract loginRequest);

@@ -1,0 +1,247 @@
+﻿@using App.Web.Models.Dtos;
+@using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims;
+@using static App.Web.Models.Constants.Constants;
+@model IEnumerable<ProductDto>
+@{
+    ViewData["Title"] = "Products";
+    var isRegularUser = User.IsInRole(Roles.Regular);
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Productos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e0e0e0;
+        }
+
+        .kart-button{
+            display: flex;
+            justify-content: flex-end;
+            margin: 40px 0 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        @{
+            if (isRegularUser)
+            {
+                <h2>Lista de Productos</h2>
+
+                <div class="kart-button">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cartModal">
+                        Ver Carrito <i class="fas fa-shopping-cart"></i>
+                    </button>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Descripción</th>
+                            <th>Cantidad</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model)
+                        {
+                            <tr>
+                                <td>@product.Name</td>
+                                <td>@product.Price</td>
+                                <td>@product.Stock</td>
+                                <td>@product.Description</td>
+                                <td>
+                                    <input type="number" min="1" max="@product.Stock" value="1" id="qty-@product.Id" />
+                                </td>
+                                <td>
+                                    <button onclick="addToCart('@product.Id', '@product.Name', @product.Price, @product.Stock)">Agregar al carrito <i class="fas fa-shopping-cart"></i></button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="cartModalLabel">Carrito de Compras</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Precio</th>
+                                            <th>Cantidad</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cartItemsBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-primary" onclick="buyCart()">Comprar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+
+    <script>
+        let shoppingKart = [];
+
+        function addToCart(productId, productName, productPrice, productStock) {
+            var quantityInput = document.getElementById('qty-' + productId);
+            var quantity = parseInt(quantityInput.value);
+
+            if (quantity <= 0) {
+                alert('La cantidad debe ser mayor a cero.');
+                return;
+            }
+
+            const productToAdd = {
+                id: productId,
+                name: productName,
+                price: productPrice,
+                quantity: quantity,
+                total: productPrice * quantity
+            }
+
+            const productAddedPreviously = shoppingKart.find(x => x.id === productId);
+            if (productAddedPreviously) {
+                productAddedPreviously.quantity = productToAdd.quantity + productAddedPreviously.quantity;
+                productAddedPreviously.total = productToAdd.total + productAddedPreviously.total;
+
+                if (productAddedPreviously.quantity > productStock) {
+                    alert('No se pueden agregar ' + quantity + ' unidades de "' + productName + '" al carrito.');
+                    return;
+                }
+                quantityInput.max = productStock - productAddedPreviously.quantity;
+            }
+            else {
+                shoppingKart.push(productToAdd);
+
+                if (productToAdd.quantity > productStock) {
+                    alert('No se pueden agregar ' + quantity + ' unidades de "' + productName + '" al carrito.');
+                    return;
+                }
+                quantityInput.max = productStock - productToAdd.quantity;
+            }
+
+            if (quantityInput.max == 0) quantityInput.min = 0;
+            quantityInput.value = quantityInput.min;
+
+            alert(quantity + ' unidades de "' + productName + '" agregadas al carrito.');
+        }
+
+        function showCartModal() {
+
+            var cartItemsBody = document.getElementById('cartItemsBody');
+            cartItemsBody.innerHTML = '';
+
+            for (var i = 0; i < shoppingKart.length; i++) {
+                var product = shoppingKart[i];
+
+                var newRow = cartItemsBody.insertRow();
+                newRow.innerHTML = `
+                                <td>${product.name}</td>
+                                <td>${product.price}</td>
+                                <td>${product.quantity}</td>
+                                <td>${(product.price * product.quantity).toFixed(2)}</td>
+                            `;
+            }
+        }
+
+        async function buyCart() {
+
+            if (shoppingKart.length === 0) {
+                alert('El carrito está vacío. Agrega productos antes de comprar.');
+                return;
+            }
+
+            var totalAmount = 0;
+            for (var i = 0; i < shoppingKart.length; i++) {
+                var product = shoppingKart[i];
+                totalAmount += product.price * product.quantity;
+            }
+
+            const response = await fetch('/api/orders', {
+                method: 'POST',
+                mode: 'cors',
+                cache: 'no-cache',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                redirect: 'follow',
+                referrerPolicy: 'no-referrer',
+                body: JSON.stringify(shoppingKart)
+            });
+
+
+            alert('Compra exitosa. Total: ' + totalAmount.toFixed(2));
+
+            shoppingKart = [];
+            window.location.reload();
+        }
+
+        var cartModal = document.getElementById('cartModal');
+        cartModal.addEventListener('show.bs.modal', showCartModal);
+
+
+    </script>
+</body>
+</html>

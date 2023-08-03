@@ -1,6 +1,6 @@
-﻿namespace App.Web.Models.Dtos
+﻿namespace App.Web.Models.Contracts.Users
 {
-    public class SignUpDto
+    public class SignupRequestContract
     {
         public string Name { get; set; } = null!;
         public string Address { get; set; } = null!;

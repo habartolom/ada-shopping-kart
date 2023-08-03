@@ -1,8 +1,12 @@
 ﻿using App.Web.Models;
+using App.Web.Models.Constants;
 using App.Web.Models.Contracts.Users;
 using App.Web.Models.Enums;
 using App.Web.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using static App.Web.Models.Constants.Constants;
 
 namespace App.Web.Controllers
 {
@@ -15,6 +19,7 @@ namespace App.Web.Controllers
             _userService = userService;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
@@ -26,15 +31,38 @@ namespace App.Web.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Signup()
+        {
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginRequestContract loginRequest)
+        public async Task<IActionResult> Login(LoginRequestContract loginRequest, string? returnUrl = null)
         {
             if (ModelState.IsValid)
             {
                 var response = await _userService.LogUserAsync(loginRequest);
                 if (response.Header.Code.Equals(HttpCodeEnum.Ok))
-                    return View("Views/Home/Index.cshtml");
+                {
+                    var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, response.Data.Username),
+                    new Claim(ClaimTypes.Role, response.Data.Role)
+                };
+
+                    await HttpContext.SignInAsync(Schemas.Cookies, new ClaimsPrincipal(new ClaimsIdentity(claims, Schemas.Cookies, ClaimTypes.Name, ClaimTypes.Role)));
+
+                    if (Url.IsLocalUrl(returnUrl))
+                    {
+                        return Redirect(returnUrl);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");   
+                    }
+                }
                 else
                 {
                     ModelState.AddModelError(string.Empty, response.Header.Message);
@@ -42,6 +70,26 @@ namespace App.Web.Controllers
                 }
             }
             return View(loginRequest);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SignUp(SignupRequestContract signupRequest)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await _userService.CreateUserAsync(signupRequest);
+                if (response.Header.Code.Equals(HttpCodeEnum.Ok))
+                {
+                    return Redirect("Login");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, response.Header.Message);
+                    return View(signupRequest);
+                }
+            }
+            return View(signupRequest);
         }
     }
 }

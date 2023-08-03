@@ -1,0 +1,133 @@
+﻿@using App.Web.Models.Dtos;
+@model OrderDetailDto
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@{
+    ViewData["Title"] = "Detail";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Usuarios</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e0e0e0;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .detail{
+            margin: 30px 0;
+        }
+
+        .products {
+            text-align: center;
+            margin: 60px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        @{
+            <h2>Detalle Orden</h2>
+
+            <table class="detail">
+                <thead>
+                    <tr>
+                        <td><strong>Orden:</strong></td>
+                        <td><strong>Fecha:</strong></td>
+                        <td><strong>Total:</strong></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Model.Id</td>
+                        <td>@Model.Date</td>
+                        <td>@Model.Total</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <h2 class="products">Productos</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in @Model.Products)
+                    {
+                        <tr>
+                            <td>@product.Name</td>
+                            <td>@product.Description</td>
+                            <td>@product.Quantity</td>
+                            <td>@product.Price</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</body>
+</html>

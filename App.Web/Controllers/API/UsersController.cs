@@ -26,9 +26,9 @@ namespace App.Web.Controllers.API
         [HttpPost("SignUp")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public Task<ResponseTypedContract<UserDto>> CreateUserAsync([FromBody] SignUpDto signUp)
+        public Task<ResponseTypedContract<UserDto>> CreateUserAsync([FromBody] SignupRequestContract signUpRequest)
         {
-            return _userService.CreateUserAsync(signUp);
+            return _userService.CreateUserAsync(signUpRequest);
         }
 
         [Authorize(Roles = Roles.Admin)]

@@ -1,5 +1,5 @@
 ﻿@using App.Web.Models.Contracts.Users;
-@model LoginRequestContract
+@model SignupRequestContract
 
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -56,34 +56,40 @@
             transition: background-color 0.3s;
         }
 
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
+            input[type="submit"]:hover {
+                background-color: #45a049;
+            }
 
-        .login-button{
+        .login-button {
             display: flex;
             justify-content: flex-end;
-        }
-        
-        .signup-link{
-            display: flex;
-            justify-content: flex-end;
-            margin: 5px 0 20px;
         }
 
     </style>
 </head>
 
 <body>
-    <h2>Ingreso</h2>
+    <h2>Registro</h2>
     <form method="post">
-        <div class="signup-link">
-            <a asp-controller="Accounts" asp-action="SignUp" >Regístrate</a>
-        </div>
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
+            <label asp-for="Name" class="control-label">Nombre</label>
+            <input asp-for="Name" class="form-control" type="text" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Address" class="control-label">Dirección</label>
+            <input asp-for="Address" class="form-control" type="text" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Phone" class="control-label">Teléfono</label>
+            <input asp-for="Phone" class="form-control" type="text" />
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+        <div class="form-group">
             <label asp-for="Username" class="control-label">Usuario</label>
-            <input asp-for="Username" class="form-control" type="text"/>
+            <input asp-for="Username" class="form-control" type="text" />
             <span asp-validation-for="Username" class="text-danger"></span>
         </div>
         <div class="form-group">
@@ -92,8 +98,7 @@
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
         <div class="form-group login-button">
-            <input type="submit" value="Ingresa" class="btn btn-primary" />
+            <input type="submit" value="Regístrate" class="btn btn-primary" />
         </div>
     </form>
-
 </body>
