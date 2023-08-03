@@ -1,9 +1,7 @@
-﻿using App.Web.Models.Contracts.Orders;
-using App.Web.Models.Contracts.Users;
+﻿using App.Web.Models.Contracts.Users;
 using App.Web.Models.Dtos;
 using App.Web.Models.Entities;
 using AutoMapper;
-using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace App.Web.Models.AutoMapper
 {

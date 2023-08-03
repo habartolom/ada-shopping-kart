@@ -1,8 +1,7 @@
-﻿namespace App.Web.Models.Dtos
+﻿namespace App.Web.Models.Contracts.Products
 {
-    public class ProductDto
+    public class ProductUpdateRequestContract
     {
-        public Guid Id { get; set; }
         public string Name { get; set; } = null!;
         public double Price { get; set; }
         public int Stock { get; set; }

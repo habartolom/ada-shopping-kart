@@ -20,12 +20,23 @@ namespace App.Web.Infrastructure.Implementations
             _table = _dbContext.Set<ProductEntity>();
         }
 
+        public IQueryable<ProductEntity> GetAll()
+        {
+            return _table;
+        }
+
         public IQueryable<ProductEntity> GetProductsByIds(IEnumerable<Guid> productIds)
         {
             var products = _table
                 .Where(product => productIds.Contains(product.Id));
 
             return products;
+        }
+
+        public async Task UpdateProductAsync(ProductEntity product)
+        {
+            _table.Update(product);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

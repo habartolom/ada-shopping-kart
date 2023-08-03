@@ -1,15 +1,19 @@
-﻿using App.Web.Models.Contracts.Response;
+﻿using App.Web.Models.Constants;
+using App.Web.Models.Contracts.Products;
+using App.Web.Models.Contracts.Response;
 using App.Web.Models.Dtos;
 using App.Web.Services.Implementations;
 using App.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static App.Web.Models.Constants.Constants;
 
 namespace App.Web.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -19,35 +23,30 @@ namespace App.Web.Controllers.API
             _productService = productService;
         }
 
-        //regular - admin
-        [AllowAnonymous]
         [HttpGet("Available")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public Task<ResponseTypedContract<IEnumerable<OrderProductDto>>> GetAvailableProductsAsync()
+        public async Task<ResponseTypedContract<IEnumerable<ProductDto>>> GetAvailableProductsAsync()
         {
-            return _productService.GetAvailableProductsAsync();
+            return await _productService.GetAvailableProductsAsync();
         }
 
 
-        //admin
-        [AllowAnonymous]
         [HttpGet("{productId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public Task<ResponseTypedContract<OrderProductDto>> GetProductsAsync([FromRoute] Guid productId)
+        public async Task<ResponseTypedContract<ProductDto>> GetProductAsync([FromRoute] Guid productId)
         {
-            return _productService.GetProductAsync(productId);
+            return await _productService.GetProductAsync(productId);
         }
 
-        //admin
-        [AllowAnonymous]
+        [Authorize(Roles = Roles.Admin)]
         [HttpPut("{productId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public Task<ResponseTypedContract<OrderProductDto>> UpdateProductsAsync([FromRoute] Guid productId)
+        public async Task<ResponseTypedContract<ProductDto>> UpdateProductAsync([FromRoute] Guid productId, [FromBody] ProductUpdateRequestContract product)
         {
-            return _productService.UpdateProductAsync(productId);
+            return await _productService.UpdateProductAsync(productId, product);
         }
     }
 }

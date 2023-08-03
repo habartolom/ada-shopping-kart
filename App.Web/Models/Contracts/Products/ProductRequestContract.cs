@@ -1,4 +1,4 @@
-﻿namespace App.Web.Models.Contracts.Orders
+﻿namespace App.Web.Models.Contracts.Products
 {
     public class ProductRequestContract
     {

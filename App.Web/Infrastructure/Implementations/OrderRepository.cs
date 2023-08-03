@@ -1,7 +1,7 @@
 ﻿using App.Web.Infrastructure.Database.Context;
 using App.Web.Infrastructure.Database.StoreProcedures;
 using App.Web.Infrastructure.Interfaces;
-using App.Web.Models.Contracts.Orders;
+using App.Web.Models.Contracts.Products;
 using App.Web.Models.Dtos;
 using App.Web.Models.Entities;
 using Microsoft.Data.SqlClient;
